@@ -6,7 +6,6 @@ module Codebreaker
 
     describe "#start" do
       before do 
-        game.stub(:ask_user_guess_and_answer)
         game.start   
       end 
 
@@ -24,45 +23,48 @@ module Codebreaker
 
       it "secret code is rendomly generated - different every time" do 
       	game2 = Game.new
-        game2.stub(:ask_user_guess_and_answer)
       	game2.start
       	expect(game.instance_variable_get(:@secret_code)).not_to eq(game2.instance_variable_get(:@secret_code))
       end
-
-      it "call game.ask_user_guess_and_answer method" do 
-        pending # как сделать, что бы тест работал? :)
-        expect(game).to receive(:ask_user_guess_and_answer)
-      end
-  	end
-
-    describe "#ask_user_guess_and_answer" do
-      it "saves users input to 'answer' variable"
     end
 
-    describe "#tell_user_what_to_do" do 
-      before {stub_const("NUMBER_OF_TURNS", 10)}
-      it "outpu's 'game-start' massage, ask user to guess secret code and tell about amount of terns left" do
-        game.number_of_turns = NUMBER_OF_TURNS
-        $stderr.puts "Lets start! Try to guess secret code from 4 numbers from 1 to 6. You have 10 turns."
+    describe "#mark_user_guess(user_input)" do
+      before {game.instance_variable_set(:@secret_code, "1234")}
+      
+      it "mark number with '+' if it match number in same position in secret code" do   
+        expect(game.mark_user_guess("1234")).to eq("++++")
       end
-
-      it "output's to try againe and" do
-        game.number_of_turns = NUMBER_OF_TURNS - 1
-        $stderr.puts "Try again.. 9 turns left"
+      it "mark number with '-' if it is the same as one of the numbers in the secret code but in a different position" do   
+        expect(game.mark_user_guess("2561")).to eq("--")
       end
-
-      it "output's about losing game if no terns left" do
-        game.number_of_turns = 0
-        $stderr.puts 'You the game'
+      it "does not mark number with '-' if it same to some number in secret code which have excect match in guess" do   
+        expect(game.mark_user_guess("1561")).to eq("+")
+      end
+      it "mark number with '-' if secret code include same number except one which have same match" do
+        game.instance_variable_set(:@secret_code, "1214")
+        expect(game.mark_user_guess("1561")).to eq("+-")
       end
     end
 
-    describe "#mark_the_guess(user_input)" do
-      before {game.secret_code = "1234"}
-      it "return ++++ if user guess matches the secret code exactly" do
-        user_input = "1234"
-        $stderr.puts "+++"
+    describe "#decrease_avaliable_turns" do
+      it "decrease amount of available turns by 1" do 
+        game.instance_variable_set(:@number_of_turns, 10)
+        expect {game.decrease_avaliable_turns}.to change{game.instance_variable_get(:@number_of_turns)}.from(10).to(9) 
+      end 
+    end
+
+    describe "#hint" do    
+      it "return secret code with one 'open' number and others marked as '*'" do
+        stub_const("Codebreaker::Game::FOO", 4)
+        game.instance_variable_set(:@secret_code, "1234")
+        game.instance_variable_set(:@hint_position, 1)
+        expect(game.hint).to eq("*2**")
       end
     end
-  end
-end
+
+    describe "need to be implemented" do
+      it "saves score"
+    end
+
+  end #for describe Game do
+end #for module Codebreaker

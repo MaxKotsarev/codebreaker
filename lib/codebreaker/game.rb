@@ -1,42 +1,68 @@
 module Codebreaker
   class Game
-  	attr_accessor :secret_code, :number_of_turns
-  	NUMBER_OF_TURNS = 10 
+  	NUMBER_OF_TURNS = 10
+    SECRET_CODE_LENGTH = 4 
 
   	def initialize
       @secret_code = ""
       @number_of_turns = NUMBER_OF_TURNS 
+      @hint_position = rand(SECRET_CODE_LENGTH)
     end
  
     def start
-      4.times {@secret_code << (1 + rand(6)).to_s} 
-      ask_user_guess_and_answer
+      SECRET_CODE_LENGTH.times {@secret_code << (1 + rand(6)).to_s} 
     end
 
-    def ask_user_guess_and_answer
-    	tell_user_what_to_do
-    	user_input = gets 
-    	#Добавить проверку корректности инпута (4 цифры, от 1 до 6.. ну или "hint")
+    def take_user_input
+      user_input = gets
+      return user_input
+    end
+
+    def mark_user_guess(user_input)
     	answer = ""
-    	for i in 0..3
-    		if user_input[i] == @secret_code[i]
+      tmp_code = ""
+      tmp_input = ""
+      for i in 0...SECRET_CODE_LENGTH
+        if user_input[i] == @secret_code[i]
+          tmp_code << "n"
+          tmp_input << "n"
+        else 
+          tmp_input << user_input[i]
+          tmp_code << @secret_code[i]
+        end 
+      end
+    	for i in 0...SECRET_CODE_LENGTH
+    		if tmp_input[i] == tmp_code[i]
     			answer << "+"
-    		elsif @secret_code.include? user_input[i]
+    		elsif tmp_code.include? tmp_input[i]
     			answer << "-"
     		end	
     	end
-    	if answer.size == 0 
-    		puts "Secret code doesn't include any number of your guess" 
-    	else 
-    		puts answer
-    	end  	
-    	if answer == "++++"
-    		puts "Congrats! You won!"
-    		return false
-    	end
-    	@number_of_turns = @number_of_turns - 1
-    	ask_user_guess_and_answer
+      return answer
     end
+
+    def decrease_avaliable_turns 
+      @number_of_turns = @number_of_turns - 1
+    end
+
+    def hint
+      hint = "" 
+      for i in 0...SECRET_CODE_LENGTH
+        i == @hint_position ? hint << @secret_code[i] : hint << "*"
+      end
+      return hint
+    end
+
+=begin
+      if answer.size == 0 
+        puts "Secret code doesn't include any number of your guess" 
+      else 
+        puts answer
+      end   
+      if answer == "++++"
+        puts "Congrats! You won!"
+        return false
+      end
 
     def tell_user_what_to_do
     	if @number_of_turns == NUMBER_OF_TURNS
@@ -47,12 +73,15 @@ module Codebreaker
 	    	puts "You lose the game"
     	end
     end
+=end
 
   end
 end
 
-=begin
+#=begin
 game = Codebreaker::Game.new
-game.start
-=end
+game.instance_variable_set(:@secret_code, "1234")
+
+puts game.hint
+#=end
 
