@@ -7,6 +7,7 @@ module Codebreaker
       @secret_code = ""
       @number_of_turns = NUMBER_OF_TURNS 
       @hint_position = rand(SECRET_CODE_LENGTH)
+      #@last_guess = "" #use for hint
     end
  
     def start
@@ -24,8 +25,8 @@ module Codebreaker
       tmp_input = ""
       for i in 0...SECRET_CODE_LENGTH
         if user_input[i] == @secret_code[i]
-          tmp_code << "n"
-          tmp_input << "n"
+          tmp_code << "+"
+          tmp_input << "+"
         else 
           tmp_input << user_input[i]
           tmp_code << @secret_code[i]

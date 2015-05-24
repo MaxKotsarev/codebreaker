@@ -31,18 +31,22 @@ module Codebreaker
     describe "#mark_user_guess(user_input)" do
       before {game.instance_variable_set(:@secret_code, "1234")}
       
-      it "mark number with '+' if it match number in same position in secret code" do   
+      it "marks number with '+' if it match number in same position in secret code" do   
         expect(game.mark_user_guess("1234")).to eq("++++")
       end
-      it "mark number with '-' if it is the same as one of the numbers in the secret code but in a different position" do   
+      it "marks number with '-' if it is the same as one of the numbers in the secret code but in a different position" do   
         expect(game.mark_user_guess("2561")).to eq("--")
       end
       it "does not mark number with '-' if it same to some number in secret code which have excect match in guess" do   
         expect(game.mark_user_guess("1561")).to eq("+")
       end
-      it "mark number with '-' if secret code include same number except one which have same match" do
+      it "marks number with '-' if secret code include same number except one which have same match" do
         game.instance_variable_set(:@secret_code, "1214")
         expect(game.mark_user_guess("1561")).to eq("+-")
+      end
+      it "can puts '-' between two '+' if not exect match (or two matches) is between exect matches" do
+        game.instance_variable_set(:@secret_code, "1214")
+        expect(game.mark_user_guess("1524")).to eq("+-+")
       end
     end
 
