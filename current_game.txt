@@ -1,0 +1,9 @@
+--- !ruby/object:Codebreaker::Game
+secret_code: '2631'
+number_of_turns: 9
+hint_position: 1
+user_guesses_and_answers:
+- '1234': "--+"
+hints_avaliable: 1
+game_status: not_completed
+result_saved: false

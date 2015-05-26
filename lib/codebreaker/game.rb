@@ -1,22 +1,25 @@
+require 'yaml'
+
 module Codebreaker
   class Game
   	NUMBER_OF_TURNS = 10
     SECRET_CODE_LENGTH = 4 
 
+    attr_accessor :user_guesses_and_answers, :game_status, :result_saved
+    attr_reader :number_of_turns, :hints_avaliable
+
   	def initialize
       @secret_code = ""
       @number_of_turns = NUMBER_OF_TURNS 
       @hint_position = rand(SECRET_CODE_LENGTH)
-      #@last_guess = "" #use for hint
+      @hints_avaliable = 1
+      @user_guesses_and_answers = []
+      @game_status = "not_completed"
+      @result_saved = false
     end
  
     def start
-      SECRET_CODE_LENGTH.times {@secret_code << (1 + rand(6)).to_s} 
-    end
-
-    def take_user_input
-      user_input = gets
-      return user_input
+      SECRET_CODE_LENGTH.times {@secret_code << (1 + rand(6)).to_s}
     end
 
     def mark_user_guess(user_input)
@@ -42,47 +45,29 @@ module Codebreaker
       return answer
     end
 
-    def decrease_avaliable_turns 
-      @number_of_turns = @number_of_turns - 1
-    end
-
     def hint
-      hint = "" 
-      for i in 0...SECRET_CODE_LENGTH
-        i == @hint_position ? hint << @secret_code[i] : hint << "*"
-      end
+      hint = "****" 
+      hint[@hint_position] = @secret_code[@hint_position]
+      @hints_avaliable -= 1
       return hint
     end
 
-=begin
-      if answer.size == 0 
-        puts "Secret code doesn't include any number of your guess" 
-      else 
-        puts answer
-      end   
-      if answer == "++++"
-        puts "Congrats! You won!"
-        return false
-      end
-
-    def tell_user_what_to_do
-    	if @number_of_turns == NUMBER_OF_TURNS
-	    	puts "Lets start! Try to guess secret code from 4 numbers from 1 to 6. You have #{@number_of_turns} turns."
-	   	elsif @number_of_turns > 0
-	   		puts "Try again.. #{@number_of_turns} turns left"
-	    else 
-	    	puts "You lose the game"
-    	end
+    def decrease_avaliable_turns
+      @number_of_turns -= 1  
     end
-=end
 
+    def score
+      @number_of_turns*10 + @hints_avaliable*30
+    end
+
+    def save_to(file_name)
+      File.open(file_name, 'w') {|f| f.write(YAML.dump(self)) }
+    end
+
+    def self.load_from(file_name)
+      YAML.load(File.read(file_name))
+    end
   end
 end
 
-#=begin
-game = Codebreaker::Game.new
-game.instance_variable_set(:@secret_code, "1234")
-
-puts game.hint
-#=end
 

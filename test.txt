@@ -1,0 +1,4 @@
+--- !ruby/object:Codebreaker::ResultsCollection
+results:
+- '123'
+- '456'
