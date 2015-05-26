@@ -71,10 +71,15 @@ module Codebreaker
     end
 
     describe "score" do
-      it "return score counted by formula 'score = available_turns * 10 + available_hints * 30'" do
+      it "return score counted by formula 'score = available_turns * 10 + available_hints * 30' (test 1)" do
         game.instance_variable_set(:@number_of_turns, 10) 
         game.instance_variable_set(:@hints_avaliable, 1)
         expect(game.score).to eq(130)
+      end
+      it "return score counted by formula 'score = available_turns * 10 + available_hints * 30' (test 2)" do
+        game.instance_variable_set(:@number_of_turns, 5) 
+        game.instance_variable_set(:@hints_avaliable, 0)
+        expect(game.score).to eq(50)
       end
     end
   end #for describe Game do

@@ -1,5 +1,3 @@
-require 'yaml'
-
 module Codebreaker   
   class ResultsCollection 
     attr_accessor :results
@@ -17,16 +15,3 @@ module Codebreaker
   	end
   end
 end
-
-=begin
-collection = Codebreaker::ResultsCollection.new 
-
-collection.results << "123"
-puts collection.results.inspect
-
-collection.results << "456"
-collection.save_to("test.txt")
-
-collection2 = Codebreaker::ResultsCollection.load_from("test.txt")
-puts collection2.results.inspect
-=end

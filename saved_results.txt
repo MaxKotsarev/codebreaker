@@ -1,2 +1,5 @@
 --- !ruby/object:Codebreaker::ResultsCollection
-results: []
+results:
+- :name: Will Smith
+  :score: 90
+  :date: 2015-05-26 16:39:06.494897000 +03:00

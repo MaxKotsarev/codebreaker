@@ -35,6 +35,7 @@ class WebUiController
 
         if game.mark_user_guess(user_input) == "++++"
           game.game_status = "win"
+          
         elsif game.number_of_turns <= 0
           game.game_status = "lose"
         end

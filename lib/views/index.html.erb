@@ -37,9 +37,9 @@
         
         <!--LOST GAME notification-->
         <% elsif game.game_status == "lose" %>
-          <p>You lost. Good lack next time )</p>
+          <p>You lost. Good lack next time )</p>       
         
-        <!--GUESS FORM-->
+        <!--GUESS FORM (for not completed game)-->
         <% else %>
           <form method="post" action="/submit_guess">
             <input name="guess" type="text" placeholder="enter your guess" autofocus>
